@@ -16,6 +16,11 @@ I would like my total score to be updated each frame
 
 
 As a bowler
+So that I can account for a worst case scenario
+I would like to be able to score a 'gutter game'
+
+
+As a bowler
 So that I can be rewarded for high scoring frames
 I would like to receive appropriate bonuses for strikes and spares
 

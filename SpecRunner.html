@@ -11,16 +11,34 @@
   <script src="lib/jasmine-2.4.1/jasmine-html.js"></script>
   <script src="lib/jasmine-2.4.1/boot.js"></script>
 
+
   <!-- include source files here... -->
   <script src="src/Game.js"></script>
   <script src="src/Frame.js"></script>
+  <script src="src/TenthFrame.js"></script>
 
   <!-- include spec files here... -->
   <script src="spec/GameSpec.js"></script>
   <script src="spec/FrameSpec.js"></script>
+  <script src="spec/TenthFrameSpec.js"></script>
 
 </head>
 
 <body>
+  <script type="text/javascript">
+    var jasmineEnvironment = jasmine.getEnv();
+    var htmlReporter = new jasmine.HtmlReporter();
+
+    jasmineEnvironment.addReporter(htmlReporter);
+    jasmineEnvironment.specFilter = function (spec) {
+      return htmlReporter.specFilter(spec);
+    };
+
+    window.onload = function() {
+      jasmineEnvironment.execute();
+    }
+    </script>
+
+
 </body>
 </html>
