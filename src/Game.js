@@ -1,28 +1,51 @@
-/*jshint esversion: 6 */
-
 function Game(player) {
-    this.player = player;
-    this.scoreSheet = [null,null,null,null,null,null,null,null,null,null]
-    this.scoreType  = [null,null,null,null,null,null,null,null,null,null]
-    this.frameNumber = 0
+  this.scoreSheet = [];
 }
 
-Game.prototype.saveFrame = function(frame) {
-  frame.tally()
-  this.scoreType.splice(this.frameNumber, 1, frame.bonus)
-  var prevBonus = this.scoreType[this.frameNumber-1]
+Game.prototype.saveRoll = function(roll) {
+  this.scoreSheet.push(roll)
+}
 
-  this.frameNumber++
-  if (prevBonus === "spare") {
-  this.scoreSheet.splice(this.frameNumber-2, 1,frame.roll1+10);
-  } else if (prevBonus === "strike") {
-    this.scoreSheet.splice(this.frameNumber-2, 1,frame.tally()+10);
+Game.prototype.currentScore = function() {
+  var score = 0;
+  var rollIndex = 0;
+
+  for (var i = 0; i < (this.scoreSheet.length / 2); i++) {
+    if (this.isStrike(rollIndex)) {
+      score += this.scoreStrike(rollIndex);
+      rollIndex -= 1
+    } else if (this.isSpare(rollIndex)) {
+      score += this.scoreSpare(rollIndex);
+    } else {
+      score += this.scoreDefault(rollIndex);
+    }
+    rollIndex += 2
   }
-  this.scoreSheet.splice(this.frameNumber-1,1,frame.tally());
+  return score;
+};
+
+Game.prototype.isSpare = function(rollIndex) {
+  return this.scoreSheet[rollIndex] + this.scoreSheet[rollIndex+1] === 10;
 }
 
-Game.prototype.currentScore = function(){
-  var flatArray = [].concat.apply([], this.scoreSheet)
-  var sum = flatArray.reduce((a,b) => a + b);
-  return sum;
+Game.prototype.isStrike = function(rollIndex) {
+  return this.scoreSheet[rollIndex] === 10;
 }
+
+Game.prototype.scoreDefault = function(rollIndex) {
+  var scores = this.scoreSheet
+  var x = rollIndex
+  return scores[x] + scores[x+1];
+}
+
+Game.prototype.scoreSpare = function(rollIndex) {
+  var scores = this.scoreSheet
+  var x = rollIndex
+  return scores[x] + scores[x+1] + (2*scores[x + 2]);
+}
+
+Game.prototype.scoreStrike = function(rollIndex) {
+  var scores = this.scoreSheet
+  var x = rollIndex
+  return scores[x] + (2*scores[x+1]) + (2*scores[x + 2])
+};
